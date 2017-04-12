@@ -21,10 +21,10 @@ before_script:
 script:
   - mkdir tests
   - cd tests
-  - composer require slim/slim
+  - composer require nikic/fast-route
   - docker run --rm --user $(id -u):$(id -g)
     --volume $(pwd):/project
-    herloct/phpmetrics:$PHP_METRICS_VERSION-$TRAVIS_BRANCH --report-html=metrics vendor/slim/slim/Slim
+    herloct/phpmetrics:$PHP_METRICS_VERSION-$TRAVIS_BRANCH --report-html=metrics ./vendor/nikic/fast-route/src
   - ls -la metrics
   - if [[ ! -f "metrics/index.html" ]]; then exit 1; fi
 
