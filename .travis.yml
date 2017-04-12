@@ -15,17 +15,17 @@ matrix:
         - IS_LATEST=1
 
 before_script:
+  - sudo apt install git
   - docker build --rm --tag herloct/phpmetrics:$PHP_METRICS_VERSION-$TRAVIS_BRANCH .
   - docker run --rm herloct/phpmetrics:$PHP_METRICS_VERSION-$TRAVIS_BRANCH
+  - git clone git@github.com:slimphp/Slim.git
 
 script:
-  - mkdir tests
-  - cd tests
-  - composer require nikic/fast-route
-  - ls -la vendor/nikic/fast-route/src
+  - cd Slim
+  - git checkout 3.8.1
   - docker run --rm --user $(id -u):$(id -g)
     --volume $(pwd):/project
-    herloct/phpmetrics:$PHP_METRICS_VERSION-$TRAVIS_BRANCH --report-html=metrics vendor/nikic/fast-route/src
+    herloct/phpmetrics:$PHP_METRICS_VERSION-$TRAVIS_BRANCH --report-html=metrics Slim
   - ls -la metrics
   - if [[ ! -f "metrics/index.html" ]]; then exit 1; fi
 
