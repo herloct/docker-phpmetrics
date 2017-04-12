@@ -33,7 +33,9 @@ script:
 
 after_success:
   - docker login -u "$DOCKER_USERNAME" -p "$DOCKER_PASSWORD";
-  - docker push herloct/phpmetrics:$PHP_METRICS_VERSION-$TRAVIS_BRANCHH;
+  - if [[ $TRAVIS_BRANCH ]] && [[ -z $TRAVIS_TAG ]]; then
+    docker push herloct/phpmetrics:$PHP_METRICS_VERSION-$TRAVIS_BRANCH;
+    fi
   - if [[ $TRAVIS_TAG ]]; then
     docker tag herloct/phpmetrics:$PHP_METRICS_VERSION-$TRAVIS_BRANCH herloct/phpmetrics:$PHP_METRICS_VERSION;
     docker push herloct/phpmetrics:$PHP_METRICS_VERSION;
