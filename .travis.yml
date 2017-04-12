@@ -24,10 +24,10 @@ script:
   - cd Slim
   - git checkout 3.8.1
   - composer install --dev
-  - vendor/bin/phpunit --log-junit build/result.xml
+  - vendor/bin/phpunit --log-junit build/junitresult.xml
   - docker run --rm --user $(id -u):$(id -g)
     --volume $(pwd):/project
-    herloct/phpmetrics:$PHP_METRICS_VERSION-$TRAVIS_BRANCH --report-html=build/metrics --junit=build/report.xml Slim
+    herloct/phpmetrics:$PHP_METRICS_VERSION-$TRAVIS_BRANCH --report-html=build/metrics --junit=build/junit.xml Slim
   - ls -la build/metrics
   - if [[ ! -f "build/metrics/index.html" ]]; then exit 1; fi
 
