@@ -23,11 +23,13 @@ before_script:
 script:
   - cd Slim
   - git checkout 3.8.1
+  - composer install --dev
+  - vendor/bin/phpunit --log-junit build/result.xml
   - docker run --rm --user $(id -u):$(id -g)
     --volume $(pwd):/project
-    herloct/phpmetrics:$PHP_METRICS_VERSION-$TRAVIS_BRANCH --report-html=metrics Slim
-  - ls -la metrics
-  - if [[ ! -f "metrics/index.html" ]]; then exit 1; fi
+    herloct/phpmetrics:$PHP_METRICS_VERSION-$TRAVIS_BRANCH --report-html=build/metrics --junit=build/report.xml Slim
+  - ls -la build/metrics
+  - if [[ ! -f "build/metrics/index.html" ]]; then exit 1; fi
 
 after_success:
   - docker login -u "$DOCKER_USERNAME" -p "$DOCKER_PASSWORD";
