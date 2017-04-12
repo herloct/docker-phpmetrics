@@ -6,6 +6,8 @@ language: php
 services:
   - docker
 
+cache: metrics
+
 matrix:
   fast_finish: true
   include:
@@ -24,9 +26,10 @@ script:
   - composer require slim/slim
   - docker run --rm --user $(id -u):$(id -g)
     --volume $(pwd):/project
-    herloct/phpmetrics:$PHP_METRICS_VERSION-$TRAVIS_BRANCH --report-html=metrics vendor/slim/slim
+    herloct/phpmetrics:$PHP_METRICS_VERSION-$TRAVIS_BRANCH --report-html=metrics vendor/slim/slim/Slim
   - ls -la .
   - ls -la metrics
+  - if [[ ! -f "metrics/index.html" ]]; then exit 1; fi
 
 after_success:
   - docker login -u "$DOCKER_USERNAME" -p "$DOCKER_PASSWORD";
