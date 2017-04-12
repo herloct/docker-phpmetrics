@@ -22,9 +22,10 @@ script:
   - mkdir tests
   - cd tests
   - composer require nikic/fast-route
+  - ls -la vendor/nikic/fast-route/src
   - docker run --rm --user $(id -u):$(id -g)
     --volume $(pwd):/project
-    herloct/phpmetrics:$PHP_METRICS_VERSION-$TRAVIS_BRANCH --report-html=metrics ./vendor/nikic/fast-route/src
+    herloct/phpmetrics:$PHP_METRICS_VERSION-$TRAVIS_BRANCH --report-html=metrics vendor/nikic/fast-route/src
   - ls -la metrics
   - if [[ ! -f "metrics/index.html" ]]; then exit 1; fi
 
