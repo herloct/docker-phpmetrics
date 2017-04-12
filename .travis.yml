@@ -1,0 +1,44 @@
+sudo: required
+dist: trusty
+
+language: php
+
+services:
+  - docker
+
+matrix:
+  fast_finish: true
+  include:
+    - php: '7.1'
+      env:
+        - PHP_METRICS_VERSION=2.1.0
+        - IS_LATEST=1
+
+before_script:
+  - sudo apt install git
+  - docker build --rm --tag herloct/phpmetrics:$PHP_METRICS_VERSION-$TRAVIS_BRANCH .
+  - docker run --rm herloct/phpmetrics:$PHP_METRICS_VERSION-$TRAVIS_BRANCH
+  - git clone https://github.com/slimphp/Slim.git
+
+script:
+  - cd Slim
+  - git checkout 3.8.1
+  - docker run --rm --user $(id -u):$(id -g)
+    --volume $(pwd):/project
+    herloct/phpmetrics:$PHP_METRICS_VERSION-$TRAVIS_BRANCH --report-html=build/metrics Slim
+  - ls -la build/metrics
+  - if [[ ! -f "build/metrics/index.html" ]]; then exit 1; fi
+
+after_success:
+  - docker login -u "$DOCKER_USERNAME" -p "$DOCKER_PASSWORD";
+  - if [[ $TRAVIS_BRANCH ]] && [[ -z $TRAVIS_TAG ]]; then
+    docker push herloct/phpmetrics:$PHP_METRICS_VERSION-$TRAVIS_BRANCH;
+    fi
+  - if [[ $TRAVIS_TAG ]]; then
+    docker tag herloct/phpmetrics:$PHP_METRICS_VERSION-$TRAVIS_BRANCH herloct/phpmetrics:$PHP_METRICS_VERSION;
+    docker push herloct/phpmetrics:$PHP_METRICS_VERSION;
+    fi
+  - if [[ $TRAVIS_TAG ]] && [[ $IS_LATEST == 1 ]]; then
+    docker tag herloct/phpmetrics:$PHP_METRICS_VERSION herloct/phpmetrics:latest;
+    docker push herloct/phpmetrics:latest;
+    fi

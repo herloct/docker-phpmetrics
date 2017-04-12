@@ -1,6 +1,10 @@
+[![license](https://img.shields.io/github/license/herloct/docker-phpmetrics.svg)]()
+[![Build Status](https://travis-ci.org/herloct/docker-phpmetrics.svg?branch=master)](https://travis-ci.org/herloct/docker-phpmetrics)
+
 ## Supported tags and respective `Dockerfile` links
 
-* [`2.0.0`, `latest`](https://github.com/herloct/docker-phpmetrics/blob/2.0.0/Dockerfile)
+* [`2.1.0`, `latest`](https://github.com/herloct/docker-phpmetrics/blob/2.1.0/Dockerfile)
+* [`2.0.0`](https://github.com/herloct/docker-phpmetrics/blob/2.0.0/Dockerfile)
 
 ## What is PhpMetrics?
 
@@ -22,7 +26,7 @@ Basic usage using current user.
 docker run --rm \
     --user $(id -u):$(id -g) \
     --volume /local/path:/project \
-    herloct/phpmetrics [<options>]
+    herloct/phpmetrics[:tag] [<options>]
 ```
 
 For example, to generate metrics of our `src` directory.
