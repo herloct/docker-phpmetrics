@@ -1,0 +1,41 @@
+sudo: required
+dist: trusty
+
+language: php
+
+services:
+  - docker
+
+matrix:
+  fast_finish: true
+  include:
+    - php: '7.1'
+      env:
+        - PHP_METRICS_VERSION=2.1.0
+        - IS_LATEST=1
+
+before_script:
+  - docker build --rm --tag herloct/phpmetrics:$PHP_METRICS_VERSION-$TRAVIS_BRANCH .
+  - docker run --rm herloct/phpmetrics:$PHP_METRICS_VERSION-$TRAVIS_BRANCH
+
+script:
+  - mkdir tests
+  - cd tests
+  - composer require slim/slim
+  - docker run --rm --user $(id -u):$(id -g)
+    --volume $(pwd):/project
+    herloct/phpmetrics:$PHP_METRICS_VERSION-$TRAVIS_BRANCH --report-html=metrics vendor/slim/slim
+  - ls -la .
+  - ls -la metrics
+
+after_success:
+  - docker login -u "$DOCKER_USERNAME" -p "$DOCKER_PASSWORD";
+  - docker push herloct/phpmetrics:$PHP_METRICS_VERSION-$TRAVIS_BRANCHH;
+  - if [[ $TRAVIS_TAG ]]; then
+    docker tag herloct/phpmetrics:$PHP_METRICS_VERSION-$TRAVIS_BRANCH herloct/phpmetrics:$PHP_METRICS_VERSION;
+    docker push herloct/phpmetrics:$PHP_METRICS_VERSION;
+    fi
+  - if [[ $TRAVIS_TAG ]] && [[ $IS_LATEST == 1 ]]; then
+    docker tag herloct/phpmetrics:$PHP_METRICS_VERSION herloct/phpmetrics:latest;
+    docker push herloct/phpmetrics:latest;
+    fi
