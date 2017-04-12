@@ -25,6 +25,7 @@ script:
   - git checkout 3.8.1
   - composer install --dev
   - vendor/bin/phpunit --log-junit build/junit.xml
+  - cat build/junit.xml
   - docker run --rm --user $(id -u):$(id -g)
     --volume $(pwd):/project
     herloct/phpmetrics:$PHP_METRICS_VERSION-$TRAVIS_BRANCH --report-html=build/metrics --junit=build/junit.xml Slim
