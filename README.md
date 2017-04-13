@@ -3,7 +3,8 @@
 
 ## Supported tags and respective `Dockerfile` links
 
-* [`2.1.0`, `latest`](https://github.com/herloct/docker-phpmetrics/blob/2.1.0/Dockerfile)
+* [`2.2.0`, `latest`](https://github.com/herloct/docker-phpmetrics/blob/2.2.0/Dockerfile)
+* [`2.1.0`](https://github.com/herloct/docker-phpmetrics/blob/2.1.0/Dockerfile)
 * [`2.0.0`](https://github.com/herloct/docker-phpmetrics/blob/2.0.0/Dockerfile)
 
 ## What is PhpMetrics?
