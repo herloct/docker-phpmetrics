@@ -11,7 +11,7 @@ matrix:
   include:
     - php: '7.1'
       env:
-        - PHP_METRICS_VERSION=2.1.0
+        - PHP_METRICS_VERSION=2.2.0
         - IS_LATEST=1
 
 before_script:
@@ -23,9 +23,13 @@ before_script:
 script:
   - cd Slim
   - git checkout 3.8.1
+  - composer install
+  - docker run --rm --user $(id -u):$(id -g)
+    --volume $(pwd):/project --workdir /project
+    php:7.1.3-alpine php vendor/bin/phpunit --log-junit=build/junit.xml
   - docker run --rm --user $(id -u):$(id -g)
     --volume $(pwd):/project
-    herloct/phpmetrics:$PHP_METRICS_VERSION-$TRAVIS_BRANCH --report-html=build/metrics Slim
+    herloct/phpmetrics:$PHP_METRICS_VERSION-$TRAVIS_BRANCH --report-html=build/metrics --junit=build/junit.xml Slim
   - ls -la build/metrics
   - if [[ ! -f "build/metrics/index.html" ]]; then exit 1; fi
 
