@@ -23,7 +23,7 @@ before_script:
 script:
   - cd Slim
   - git checkout 3.8.1
-  - composer install -ao --prefer-dist
+  - composer install
   - docker run --rm --user $(id -u):$(id -g)
     --volume $(pwd):/project --workdir /project
     php:7.1.3-alpine php vendor/bin/phpunit --log-junit=build/junit.xml
